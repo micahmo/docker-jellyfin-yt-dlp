@@ -14,10 +14,11 @@ jobs:
       - name: Determine Tag Name
         id: tag_name
         run: |
-          if [ "${GITHUB_REF##*/}" == "main" ]; then
+          branch_name=$(echo ${{ github.event.ref }} | sed 's|.*/||')
+          if [ "$branch_name" == "main" ]; then
             echo "latest"
           else
-            echo "${GITHUB_REF##*/}" | tr '/' '-' | tr '[:upper:]' '[:lower:]'
+            echo "$branch_name" | tr '/' '-' | tr '[:upper:]' '[:lower:]'
           fi
         shell: bash
 
