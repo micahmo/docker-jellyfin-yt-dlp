@@ -16,10 +16,13 @@ jobs:
         run: |
           branch_name=$(echo ${{ github.event.ref }} | sed 's|.*/||')
           if [ "$branch_name" == "main" ]; then
-            echo "latest" >> $GITHUB_ENV
+            echo "latest"
           else
-            echo "$branch_name" | tr '/' '-' | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
+            echo "$branch_name" | tr '/' '-' | tr '[:upper:]' '[:lower:]'
           fi
+        shell: bash
+        env:
+          TAG_NAME: ${{ steps.tag_name.outputs.stdout }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -29,7 +32,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ env.tag_name }} .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ env.TAG_NAME }} .
 
       - name: Push Docker Image to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ env.tag_name }}
+        run: docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ env.TAG_NAME }}
