@@ -19,7 +19,7 @@ jobs:
       - name: Determine Tag Name
         id: tag_name
         run: |
-          branch_name=$(echo ${{ github.event.ref }} | sed 's|.*/||')
+          branch_name=$(echo $GITHUB_REF_NAME | sed 's|.*/||')
           if [ "$branch_name" == "main" ]; then
             echo "TAG_NAME=latest" >> $GITHUB_OUTPUT
           else
